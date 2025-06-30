@@ -6,11 +6,11 @@ class SignatureGFPair:
         self.signature = signature
         self.generating_function = generating_function
 
-    def __eq__(self, other):
-        return self.signature == other.signature
+    # def __eq__(self, other):
+    #     return self.signature == other.signature
 
-    def __hash__(self):
-        return hash(self.signature)
+    # def __hash__(self):
+    #     return hash(self.signature)
 
     def __repr__(self):
         return f"{self.signature} -> {self.generating_function}"
