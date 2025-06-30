@@ -13,12 +13,13 @@ from signature_table import SignatureTable
 
 # Testing cell
 def test_signature_class():
-    states = [4,0,4,3,2,0,2,0,1]
+    states = [0,0,4,3,2,0,2,0,0]
+    predecessor_occupation = [False,False,False,False,True,True,True, False, False]
     signature_test1 = Signature(states)
     signature_test2 = Signature(states, True, True)
 
-    print(signature_test1.__repr__(multiline = False))
-# test_signature_class()
+    print(signature_test1.__repr__(multiline = True))
+test_signature_class()
 
 def test_signature_table():
     # Define some signatures
