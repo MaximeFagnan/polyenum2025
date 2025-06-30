@@ -20,7 +20,6 @@ python_implementation/
 ├── tests/
 │   └──test.py
 ├── README.md
-└── setup.py
 ```
 
 ## Usage

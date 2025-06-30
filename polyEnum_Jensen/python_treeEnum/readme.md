@@ -1,6 +1,6 @@
 # Polyomino Enumerator
 
-This project implements Iwan Jensen's algorithm for enumerating polyominoes, written in pure Python. The code is modular and built around core object-oriented classes representing polyomino boundary signatures, their generating functions, and dynamic programming transitions.
+This project implements Iwan Jensen's algorithm for enumerating tree-like polyominoes, written in pure Python. The code is modular and built around core object-oriented classes representing polyomino boundary signatures, their generating functions, and dynamic programming transitions.
 
 ## Features
 - Computes the number of fixed polyominoes of each size up to `n`
@@ -20,7 +20,6 @@ python_implementation/
 ├── tests/
 │   └──test.py
 ├── README.md
-└── setup.py
 ```
 
 ## Usage
