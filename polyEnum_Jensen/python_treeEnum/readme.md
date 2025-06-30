@@ -9,8 +9,7 @@ This project implements Iwan Jensen's algorithm for enumerating tree-like polyom
 - Supports mirrored signature merging to reduce computation
 
 ## Structure
-```
-python_implementation/
+python_polyEnum/
 ├── generating_function.py
 ├── signature.py
 ├── signature_pair.py
@@ -26,7 +25,8 @@ python_implementation/
 ```python
 from poly_enum.enumerator import PolyominoEnumerator
 
-enumerator = PolyominoEnumerator(n=10)
+n=10
+enumerator = PolyominoEnumerator(n)
 gf = enumerator.run()
 print(gf)
 ```
@@ -34,12 +34,11 @@ print(gf)
 ## Dependencies
 - Python 3.9+
 
-## Development
-Tests are located in the `tests/` folder and can be run with `pytest`.
+## OEIS
+Tests are located in the `tests/` folder. The OEIS comparator let's you quickly compare the calculated values with the values from OEIS and include a runtime calculator for the program.
 
 ## Author
 Maxime Fagnan
 
 ## License
 MIT License
-

@@ -14,7 +14,7 @@ There are two main modifications to Jensen's tree-like polyomino enumeration:
 
 ## Structure
 ```
-python_implementation/
+python_snakeEnum/
 ├── generating_function.py
 ├── signature.py
 ├── signature_pair.py
@@ -30,11 +30,23 @@ python_implementation/
 ```python
 from poly_enum.enumerator import PolyominoEnumerator
 
-enumerator = PolyominoEnumerator(n=10)
+n=10
+enumerator = PolyominoEnumerator(n)
 gf = enumerator.run()
 print(gf)
 ```
 
+## Dependencies
+- Python 3.9+
+
+## OEIS
+Tests are located in the `tests/` folder. The OEIS comparator let's you quickly compare the calculated values with the values from OEIS and include a runtime calculator for the program.
+
+## Author
+Maxime Fagnan
+
+## License
+MIT License
 ## Dependencies
 - Python 3.9+
 
