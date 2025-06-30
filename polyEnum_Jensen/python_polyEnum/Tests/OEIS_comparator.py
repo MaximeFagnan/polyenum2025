@@ -11,7 +11,7 @@ from enumerator import PolyominoEnumerator
 for n in [19]:
     # n=23 # Change as desired....
     # 17 is executed in more or less 3.5 seconds on computer.
-    # 19 is executed in more or less 8 seconds on computer.
+    # 19 is executed in more or less 9 seconds on computer.
     # 21 is executed in more or less 31 seconds on computer.
     # n = 23
     # program runtime: 95.09101414680481
