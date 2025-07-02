@@ -27,7 +27,7 @@ class Signature:
         return (self.states == other.states and
                 self.touches_top == other.touches_top and
                 self.touches_bottom == other.touches_bottom and
-                self.predecessor_occupation == self.predecessor_occupation)
+                self.predecessor_occupation == other.predecessor_occupation)
 
     def compute_hash(self):
         base_hash = hash(self.states)
