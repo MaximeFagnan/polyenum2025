@@ -17,9 +17,9 @@ class SignatureTable:
 
     def add(self, pair: SignatureCounter_pair):
         if pair.signature in self.mapping:
-            self.mapping[pair.signature] += pair.area_Counter
+            self.mapping[pair.signature] += pair.maxAreaCount
         else:
-            self.mapping[pair.signature] = pair.area_Counter
+            self.mapping[pair.signature] = pair.maxAreaCount
 
     # convenience function
     def items(self):

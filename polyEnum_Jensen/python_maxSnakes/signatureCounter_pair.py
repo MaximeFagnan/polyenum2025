@@ -1,20 +1,20 @@
 from signature import Signature
-from max_area_Counter import max_area_Counter
+from max_area_count import MaxAreaCount
 from transitions_table import TRANSITION_TABLE
 
 class SignatureCounter_pair:
-    def __init__(self, signature, area_Counter):
+    def __init__(self, signature, maxAreaCount):
         self.signature = signature
-        self.area_Counter = area_Counter
+        self.maxAreaCount = maxAreaCount
 
     def __repr__(self):
-        return f"{self.signature} \n-> \n{self.area_Counter}"
+        return f"{self.signature} \n-> \n{self.maxAreaCount}"
 
     def __add__(self, other):
         assert isinstance(SignatureCounter_pair, other), "Must add sig-counter pairs with sig-counter pairs"
         assert self.signature == other.signature, "Signatures must match for addition"
-        new_area_Counter = self.area_Counter + other.area_Counter
-        return SignatureCounter_pair(self.signature, new_area_Counter)
+        new_maxAreaCount = self.maxAreaCount + other.maxAreaCount
+        return SignatureCounter_pair(self.signature, new_maxAreaCount)
 
     def transition(self, row, modify_to):
         sig: Signature = self.signature
@@ -60,9 +60,9 @@ class SignatureCounter_pair:
         new_states = list(sig.states)
         
         # update max_area_Counter
-        new_area_Counter :max_area_Counter = self.area_Counter.clone()
+        new_maxAreaCount :MaxAreaCount = self.maxAreaCount.clone()
         if modify_to == 1:
-            new_area_Counter.increase_max_area()
+            new_maxAreaCount.increase_max_area()
         else:
             pass # could prune here?
 
@@ -162,4 +162,4 @@ class SignatureCounter_pair:
 
         # Return new pair
         assert new_signature is not None, "New signature should not be None because all cases should be handled"
-        return SignatureCounter_pair(new_signature, new_area_Counter)
+        return SignatureCounter_pair(new_signature, new_maxAreaCount)

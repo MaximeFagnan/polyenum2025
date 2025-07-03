@@ -9,7 +9,7 @@ TRANSITION_TABLE = {
     (0, 0, 3): ("blank", 0, 3),
     (0, 0, 4): ("blank", 0, 4),
 
-    (0, 1, 0): ("impossible", 0, 0), #add operation verified in control loop, otherwise it's invalid because we sever a component
+    (0, 1, 0): ("impossible", 0, 0), # Invalid because we sever a component
     (0, 1, 1): ("impossible", 0, 0),
     (0, 1, 2): ("impossible", 0, 0),
     (0, 1, 3): ("impossible", 0, 0),
