@@ -1,0 +1,10 @@
+2025-07-04T12:06:22.300557
+Jensen-style algorithm to find maximal snake in an 1 x 1 square (using conjecture 2/3 + min_bound pruning)
+Max area: 1 
+Number of configurations: 1
+Here are some column by column stats:
+	Number of pruned signatures with construction and 2/3 theorem: {}
+	Number of pruned signatures with vert_symmetries: {0: 1}
+	Number of total sigs per column before vert_symmetry pruning: {1: 2}
+Program runtime: 0.00s
+

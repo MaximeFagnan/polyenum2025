@@ -1,5 +1,6 @@
+import os
 import time
-
+from datetime import datetime
 # This is the max snake class to enumerate number of maximal snakes in a bxh rectangle
 from signature import Signature
 from max_area_count import MaxAreaCount
@@ -186,19 +187,19 @@ class maxSnake_Enumerator:
         return sig_area_in_rect + conject_23_fill_area < self.min_bound
     
 
-for n in {11,12,13,14}:
-    program = maxSnake_Enumerator(n,n)
-    start = time.time()
-    print(f"Jensen style algorithm to find maximal snake in an {n} x {n} square (using conjecture 2/3 + min_bound pruning)")
-    print(program.run(True)) 
-    runtime = time.time() - start
-    print("Here are some column by column stats:")
-    print(f"\tNumber of pruned signatures with construction and 2/3 theorem: {program.prune_count}")
-    print(f"\tNumber of pruned signatures with vert_symmetries: {program.vertical_symmetry_prune_count}")
-    print(f"\tNumber of total sigs per column before vert_symmetry pruning: {program.signatures_per_column}")
-    # print(f"Proposed min_bound: {program.min_bound}")
-    print(f"program runtime: {runtime}s")
-    print()
+# for n in {13,14}:
+#     program = maxSnake_Enumerator(n,n)
+#     start = time.time()
+#     print(f"Jensen style algorithm to find maximal snake in an {n} x {n} square (using conjecture 2/3 + min_bound pruning)")
+#     print(program.run(True)) 
+#     runtime = time.time() - start
+#     print("Here are some column by column stats:")
+#     print(f"\tNumber of pruned signatures with construction and 2/3 theorem: {program.prune_count}")
+#     print(f"\tNumber of pruned signatures with vert_symmetries: {program.vertical_symmetry_prune_count}")
+#     print(f"\tNumber of total sigs per column before vert_symmetry pruning: {program.signatures_per_column}")
+#     # print(f"Proposed min_bound: {program.min_bound}")
+#     print(f"program runtime: {runtime}s")
+#     print()
 
     # program = maxSnake_Enumerator(n,n)
     # start = time.time()
@@ -211,3 +212,32 @@ for n in {11,12,13,14}:
     # print(f"    Number of total sigs per column before vert_symmetry pruning: {program.signatures_per_column}")
     # # print(f"Proposed min_bound: {program.min_bound}")
     # print(f"program runtime: {runtime}s")
+
+def safe_run_and_log(n_values):
+    os.makedirs("polyEnum_Jensen/python_maxSnakes/data", exist_ok=True)
+
+    for n in n_values:
+        filename = f"polyEnum_Jensen/python_maxSnakes/data/maxsnakeEnumData_{n}x{n}.txt"
+        with open(filename, "w") as f:
+            def log(msg):
+                print(msg)         # Keep this if you still want to see the output live
+                print(msg, file=f) # Save to file
+
+            program = maxSnake_Enumerator(n, n)
+            start = time.time()
+            log(f"{datetime.now().isoformat()}")
+            log(f"Jensen-style algorithm to find maximal snake in an {n} x {n} square (using conjecture 2/3 + min_bound pruning)")
+            
+            result = program.run(True)
+            log(str(result))
+
+            runtime = time.time() - start
+            log("Here are some column by column stats:")
+            log(f"\tNumber of pruned signatures with construction and 2/3 theorem: {program.prune_count}")
+            log(f"\tNumber of pruned signatures with vert_symmetries: {program.vertical_symmetry_prune_count}")
+            log(f"\tNumber of total sigs per column before vert_symmetry pruning: {program.signatures_per_column}")
+            # log(f"Proposed min_bound: {program.min_bound}")
+            log(f"Program runtime: {runtime:.2f}s")
+            log("")
+
+safe_run_and_log([12])

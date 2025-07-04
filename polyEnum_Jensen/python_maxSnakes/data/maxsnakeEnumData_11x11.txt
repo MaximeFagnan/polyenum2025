@@ -1,0 +1,10 @@
+2025-07-04T12:08:10.691074
+Jensen-style algorithm to find maximal snake in an 11 x 11 square (using conjecture 2/3 + min_bound pruning)
+Max area: 77 
+Number of configurations: 2352
+Here are some column by column stats:
+	Number of pruned signatures with construction and 2/3 theorem: {1: 67, 2: 68355, 3: 174804, 4: 778501, 5: 1405099, 6: 555874, 7: 1576099, 8: 463435, 9: 1004124, 10: 507241}
+	Number of pruned signatures with vert_symmetries: {0: 1, 1: 962, 2: 1844, 3: 122363, 4: 189816, 5: 113137, 6: 197693, 7: 97159, 8: 132726, 9: 167445, 10: 247106}
+	Number of total sigs per column before vert_symmetry pruning: {1: 1981, 2: 76443, 3: 473805, 4: 462037, 5: 355526, 6: 533432, 7: 265510, 8: 382134, 9: 423263, 10: 612569, 11: 1263373}
+Program runtime: 578.02s
+
