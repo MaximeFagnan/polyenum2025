@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstddef> // for size_t
 #include "RowEntry.hpp"
+#include <cassert>
 
 // Warning this, just setting a bigger row height might break mirror and == for uninitialized RowEntrys
 constexpr int SIGNATURE_HEIGHT = 16; // Row height of 16, needs to be changed to the specific height of a signature. 
@@ -15,20 +16,66 @@ constexpr int SIGNATURE_HEIGHT = 16; // Row height of 16, needs to be changed to
 // ---------------------------------------------------------
 struct Signature {
     std::array<RowEntry, SIGNATURE_HEIGHT> rows;
-    size_t height;
+    int height;
     size_t cached_hash;
+    //short int number_of_connected_components; Only useful at the end, overcalculation if we calculate for every sig.
 
     // Constructor initializes height and clears hash
-    Signature(size_t h = 0) : height(h), cached_hash(0) {}
+    Signature(int h = 0) :
+        height(h),
+        cached_hash(0)//,
+        //number_of_connected_components(0)
+    {
+        assert(h <= SIGNATURE_HEIGHT && "Too many row entries for Signature");
+    }
+
+    // Overloaded constructor that receives a list of row_entries and computes hashes
+    Signature(const std::vector<RowEntry>& row_entries)
+        : height(static_cast<int>(row_entries.size())), cached_hash(0) {
+        assert(row_entries.size() <= SIGNATURE_HEIGHT && "Too many row entries for Signature");
+        assert(height <= SIGNATURE_HEIGHT && "Too many row entries for Signature");
+        for (size_t i = 0; i < row_entries.size(); ++i) {
+            rows[i] = row_entries[i];
+        }
+        compute_hash();
+    }
 
     // Set the row at position `row` with state and leftOccupied flag
-    void set_row(size_t row, uint8_t state, bool leftOccupied) {
+    void set_row(int row, uint8_t state, bool leftOccupied) {
         rows[row] = RowEntry(state, leftOccupied);
+        // Lines to keep track of number of connected components from the get go.
+        //if (state == 4 or state == 1 ) {
+        //    number_of_connected_components += 1; //Starting a new component
+        //    // Note that there is no safety for an invalid signature that has components that start and don't finish
+        //}
     }
 
     // Retrieve the row at position `row`
     RowEntry get_row(size_t row) const {
         return rows[row];
+    }
+
+    // Retrieve all the row entries
+    std::vector<RowEntry> get_row_entries() const {
+        return std::vector<RowEntry>(rows.begin(), rows.begin() + height);
+    }
+
+    // Retrieve only the states
+    std::vector<uint8_t> get_states() const {
+        std::vector<uint8_t> states;
+        for (int i = 0; i < height; ++i) {
+            states.push_back(rows[i].state);
+        }
+        return states;
+    }
+
+    // Retrieve only the left_occupation
+    std::vector<uint8_t> get_left_occupation() const {
+        std::vector<uint8_t> left_occupation;
+        for (int i = 0; i < height; ++i) {
+            left_occupation.push_back(rows[i].leftOccupied);
+        }
+        return left_occupation;
     }
 
     // Boost-style hash combine
@@ -43,6 +90,19 @@ struct Signature {
         cached_hash = h;
     }
 
+    bool is_connected() const {
+        short nb_components = 0;
+        for (int i = 0; i < height; i++) {
+            int state = get_row(i).state;
+            // go over all states and increase value when hitting an isolated component or when starting a component
+            if (state == 1 or state == 4) {
+                nb_components += 1;
+                if (nb_components >= 2) return false;
+            }
+        }
+        return nb_components == 1;
+    }
+
     // Equality operator: compare row-by-row and height
     bool operator==(const Signature& other) const {
         if (height != other.height) return false;
@@ -53,6 +113,19 @@ struct Signature {
                 return false;
         }
         return true;
+    }
+
+    Signature mirror_clone() const{
+        std::array<int, 5> state_swap = { 0, 1, 4, 3, 2 };
+        Signature mirrored_sig = Signature(height);
+        for (int i = height - 1; i >= 0; i--) {
+            RowEntry row = rows[i];
+            int state = state_swap[row.state];
+            bool l_occupation = row.leftOccupied;
+            mirrored_sig.set_row(height-1-i, state, l_occupation);
+        }
+        mirrored_sig.compute_hash();
+        return mirrored_sig;
     }
 };
 

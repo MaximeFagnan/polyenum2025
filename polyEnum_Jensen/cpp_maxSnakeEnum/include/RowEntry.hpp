@@ -10,4 +10,8 @@ struct RowEntry {
 
     RowEntry(uint8_t s = 0, bool left = false)
         : state(s), leftOccupied(left ? 1 : 0) {}
+
+    bool operator==(const RowEntry& other) const {
+        return state == other.state && leftOccupied == other.leftOccupied;
+    }
 };
