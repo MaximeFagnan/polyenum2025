@@ -35,10 +35,10 @@ public:
         
     }
 
-    // This does not seem safe... probably should not use this
-    const std::unordered_map<Signature, MaxAreaCount, SignatureHasher>& items() const {
-        return mapping;
-    }
+    //// This does not seem safe... probably should not use thi
+    //const std::unordered_map<Signature, MaxAreaCount, SignatureHasher>& items() const {
+    //    return mapping;
+    //}
 
 
     void merge_mirrored_signatures() {
@@ -56,11 +56,11 @@ public:
             seen.insert(sig);
             seen.insert(mirrored);
 
-            if (sig == mirrored and mapping.count(mirrored) > 0) {
-                new_mapping[sig] = count;
+            if (mapping.count(mirrored) > 0 and !(mirrored==sig)) {
+                new_mapping[sig] = count + mapping[mirrored];
             }
             else {
-                new_mapping[sig] = count + mapping[mirrored];
+                new_mapping[sig] = count;
             }
         }
 
