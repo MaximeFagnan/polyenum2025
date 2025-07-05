@@ -33,6 +33,7 @@ struct MaxAreaCount {
         return MaxAreaCount(max_area, nb_configs);
     }
 
+    // Basically the to_string method (overloads the << operator and has weird pointer syntax).
     friend std::ostream& operator<<(std::ostream& os, const MaxAreaCount& mac) {
         os << "Max area: " << mac.max_area
             << "\nNumber of configurations: " << mac.nb_configs;
