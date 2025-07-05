@@ -56,3 +56,5 @@ polyEnum_Jensen/cpp_maxSnakeEnum/cpp_maxSnakeEnum/x64/Debug/cpp_maxSnakeEnum.tlo
 polyEnum_Jensen/cpp_maxSnakeEnum/cpp_maxSnakeEnum/x64/Debug/cpp_maxSnakeEnum.log
 polyEnum_Jensen/cpp_maxSnakeEnum/cpp_maxSnakeEnum.vcxproj
 polyEnum_Jensen/cpp_maxSnakeEnum/cpp_maxSnakeEnum.sln
+.vs/slnx.sqlite
+*.sqlite
