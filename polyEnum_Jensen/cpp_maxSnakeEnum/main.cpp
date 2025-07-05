@@ -1,16 +1,20 @@
 #include "include/Signature.hpp"
 #include <cassert>
 #include "include/transition_table.hpp"
+#include "include/MaxAreaCounter.hpp"
 
 // functions described below
 void signature_map_manipulation_example();
 void test_mirror_clone_lookup();
 void test_signature_vector_constructor();
+void test_maxAreaCounter();
+
 
 int main() {
     //signature_map_manipulation_example();
     //test_mirror_clone_lookup();
     //test_signature_vector_constructor();
+    test_maxAreaCounter();
     return 0;
 }
 
@@ -115,4 +119,14 @@ void test_signature_vector_constructor() {
     }
 
     std::cout << "test_signature_vector_constructor passed.\n";
+}
+
+void test_maxAreaCounter() {
+    MaxAreaCount a(5, 3);
+    MaxAreaCount b(4, 10);
+    MaxAreaCount c = a + b; // c = a (because a.max_area > b.max_area)
+    c.increase_max_area();  // Only c changes
+
+    std::cout << "a: " << a.max_area << "\n"; // still 5
+    std::cout << "c: " << c.max_area << "\n"; // now 6
 }
