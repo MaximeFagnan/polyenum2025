@@ -1,5 +1,6 @@
 #include "include/Signature.hpp"
 #include <cassert>
+#include "include/transition_table.hpp"
 
 // functions described below
 void signature_map_manipulation_example();

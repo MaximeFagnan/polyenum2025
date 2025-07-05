@@ -20,7 +20,8 @@ struct Signature {
     size_t cached_hash;
     //short int number_of_connected_components; Only useful at the end, overcalculation if we calculate for every sig.
 
-    // Constructor initializes height and clears hash
+    // Constructor initializes height and clears hash 
+    // NOTE: THIS DOES NOT CREATE A HASH FOR THE SIGNATURE: UNSAFE!
     Signature(int h = 0) :
         height(h),
         cached_hash(0)//,
@@ -116,6 +117,7 @@ struct Signature {
     }
 
     Signature mirror_clone() const{
+        // Swap the 2's and the 4's
         std::array<int, 5> state_swap = { 0, 1, 4, 3, 2 };
         Signature mirrored_sig = Signature(height);
         for (int i = height - 1; i >= 0; i--) {
