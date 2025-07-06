@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TRANSITION_TABLE_HPP
 #define TRANSITION_TABLE_HPP
 

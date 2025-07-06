@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SIGNATURE_TABLE_HPP
 #define SIGNATURE_TABLE_HPP
 
@@ -35,10 +36,10 @@ public:
         
     }
 
-    //// This does not seem safe... probably should not use thi
-    //const std::unordered_map<Signature, MaxAreaCount, SignatureHasher>& items() const {
-    //    return mapping;
-    //}
+    // This does not seem safe... probably should not use this?
+    const std::unordered_map<Signature, MaxAreaCount, SignatureHasher>& items() const {
+        return mapping;
+    }
 
 
     void merge_mirrored_signatures() {

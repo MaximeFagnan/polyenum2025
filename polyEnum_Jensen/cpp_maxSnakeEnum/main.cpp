@@ -2,25 +2,27 @@
 #include <cassert>
 #include "include/transition_table.hpp"
 #include "include/MaxAreaCounter.hpp"
+#include "include/SignatureCounter_pair.hpp"
 
 // functions described below
 void signature_map_manipulation_example();
 void test_mirror_clone_lookup();
 void test_signature_vector_constructor();
 void test_maxAreaCounter();
+void test_signature_transition();
 
 
 int main() {
     //signature_map_manipulation_example();
     //test_mirror_clone_lookup();
     //test_signature_vector_constructor();
-    test_maxAreaCounter();
+    //test_maxAreaCounter();
+    //test_signature_transition();
+
     return 0;
 }
 
-// ---------------------------------------------------------
-// Example usage of signature
-// ---------------------------------------------------------
+
 void signature_map_manipulation_example(){
     // Create an unordered_map with Signature as key and size_t as value
     std::unordered_map<Signature, size_t, SignatureHasher> sig_map;
@@ -129,4 +131,57 @@ void test_maxAreaCounter() {
 
     std::cout << "a: " << a.max_area << "\n"; // still 5
     std::cout << "c: " << c.max_area << "\n"; // now 6
+}
+
+
+void test_signature_transition() {
+    // Construct original signature: "43012042"
+    std::vector<RowEntry> row_entries = {
+        {4, true}, // row 0 (bottom-most)
+        {3, false},
+        {0, false},
+        {1, false},
+        {2, true},
+        {0, false},
+        {4, false},
+        {2, false}  // row 7 (top-most)
+    };
+    Signature sig(row_entries);
+
+    // Initialize MaxAreaCount with area = 25
+    MaxAreaCount mac = MaxAreaCount(25,17);
+
+    SignatureCounterPair scp(sig, mac);
+
+    // Test transition at row = 4 (index of the red 't') with modify_to = 1 (add a cell)
+    std::optional<SignatureCounterPair> result = scp.transition(4, 0);
+
+    if (!result.has_value()) {
+        std::cout << "Transition returned nullopt (invalid or pruned)." << std::endl;
+        return;
+    }
+
+    // Print the resulting signature
+    const Signature& new_sig = result->signature;
+    std::cout << "New Signature Row Entries (top to bottom):" << std::endl;
+    for (int i = 0; i < new_sig.height; ++i) {
+        const RowEntry& row = new_sig.get_row(i);
+        std::cout << "Row " << i << ": (leftOccupied=" << (int)row.leftOccupied
+            << ", state=" << (int)row.state << ")" << std::endl;
+    }
+
+    // Print new max area
+    std::cout << "NEW Max Area: " << result->maxAreaCount << std::endl <<std::endl;
+    
+
+    //old sig
+    std::cout << "OLD Signature Row Entries (top to bottom):" << std::endl;
+    for (int i = 0; i < sig.height; ++i) {
+        const RowEntry& row = sig.get_row(i);
+        std::cout << "Row " << i << ": (leftOccupied=" << (int)row.leftOccupied
+            << ", state=" << (int)row.state << ")" << std::endl;
+    }
+
+    // Print old max area
+    std::cout << "OLD Max Area: " << scp.maxAreaCount << std::endl;
 }

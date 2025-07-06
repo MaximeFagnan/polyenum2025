@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef MAX_AREA_COUNT_HPP
 #define MAX_AREA_COUNT_HPP
 
