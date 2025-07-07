@@ -152,7 +152,7 @@ class maxSnake_Enumerator:
             conject_23_fill_area = self.conj_23(b_23,h_23)
         
         # Area to the right can be split into two useful rectangles
-        elif row>=2 and row<=self.h-4:
+        else:
             #rectangle 1
             b_23 = self.b - col
             h_23 = row+1
@@ -161,8 +161,6 @@ class maxSnake_Enumerator:
             b_23 = (self.b - col) + 1
             h_23 = self.h - (row+1)
             conject_23_fill_area += self.conj_23(b_23,h_23)
-
-        else: return False # Haven't found a way to prune
         
         return sig_max_area + conject_23_fill_area < self.min_bound
 
@@ -222,4 +220,4 @@ def safe_run_and_log(n_values):
             log(f"Program runtime: {runtime:.2f}s")
             log("")
 
-safe_run_and_log([10])
+safe_run_and_log([9])
