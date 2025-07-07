@@ -22,7 +22,7 @@ class maxSnake_Enumerator:
         self.vertical_symmetry_prune_count = {}
         # self.run()
 
-    def run(self, prune) -> MaxAreaCount:
+    def run(self) -> MaxAreaCount:
         # reset max for every run
         self.max_area_counter = MaxAreaCount(0,1)
         h,b = self.h, self.b
@@ -45,16 +45,26 @@ class maxSnake_Enumerator:
                 new_table = SignatureTable()
                 for sig, maxAreaCount in table.items():
                     sig_count = SignatureCounter_pair(sig, maxAreaCount)
-                    for to_modify in {0,1}:
+                    for to_modify in [0,1]:
+                        if to_modify==0 and self.should_prune(sig_count,col,row):
+                            self.prune_count[(col,row)] = self.prune_count.get((col,row),0)+1 # we pruned, let's count it
+                            continue # do not even try the transition
+                        # # This code would replace the pruning in the next section
+                        # # It is better tu prune after determining if transition is valid (experimentally)
+                        # elif to_modify == 1:
+                        #     sig_count.maxAreaCount.increase_max_area()
+                        #     if self.should_prune(sig_count,col,row):
+                        #         self.prune_count[(col,row)] = self.prune_count.get((col,row),0)+1 # we pruned, let's count it
+                        #         continue
+                        #     sig_count.maxAreaCount.decrease_max_area()
+
                         new_pair = sig_count.transition(row, to_modify)
                         if new_pair is not None:
-                            if prune:
-                                if not self.should_prune(new_pair,col,row):
-                                    new_table.add(new_pair) # we did not prune
-                                else:
-                                    self.prune_count[(col,row)] = self.prune_count.get((col,row),0)+1 # we pruned, let's count it
-                            else: # no pruning at all
-                                new_table.add(new_pair)
+                            if to_modify==1 and self.should_prune(new_pair,col,row):
+                                self.prune_count[(col,row)] = self.prune_count.get((col,row),0)+1 # we pruned, let's count it
+                                continue # do not even try the transition
+                            new_table.add(new_pair) # we did not prune
+                            
 
                 # Update the signatureGF table after every move of the kink
                 table = new_table
@@ -128,7 +138,7 @@ class maxSnake_Enumerator:
 
     
     def should_prune(self, sig_counter_pair: SignatureCounter_pair,col: int, row:int) -> bool:
-        sig: Signature = sig_counter_pair.signature
+        sig: Signature = sig_counter_pair.signature # not used
         sig_max_area :int = sig_counter_pair.maxAreaCount.max_area
         column_complete = (row == self.h-1) # kink at bottom of column iff row == h-1
 
@@ -155,15 +165,6 @@ class maxSnake_Enumerator:
         else: return False # Haven't found a way to prune
         
         return sig_max_area + conject_23_fill_area < self.min_bound
-        # print(
-        #     f"[PRUNE DEBUG]\n"
-        #     f"  col={col}, row={row}, b={self.b}, h={self.h}\n"
-        #     f"  column_incomplete={column_incomplete}\n"
-        #     f"  w={w}, h={h}\n"
-        #     f"  sig.max_area={sig_max_area}\n"
-        #     f"  area_above_kink={area_above_kink}, sig_area_in_rect={sig_area_in_rect}\n"
-        #     f"  total_possible={sig_area_in_rect + conject_23_fill_area}, min_bound={self.min_bound}"
-        # )
 
 
     def conj_23(self, w: int, h: int) -> int:
@@ -189,33 +190,10 @@ class maxSnake_Enumerator:
             conject_23_fill_area = (2*w*h + 2)//3
         return conject_23_fill_area
         
-    
 
-# for n in {13,14}:
-#     program = maxSnake_Enumerator(n,n)
-#     start = time.time()
-#     print(f"Jensen style algorithm to find maximal snake in an {n} x {n} square (using conjecture 2/3 + min_bound pruning)")
-#     print(program.run(True)) 
-#     runtime = time.time() - start
-#     print("Here are some column by column stats:")
-#     print(f"\tNumber of pruned signatures with construction and 2/3 theorem: {program.prune_count}")
-#     print(f"\tNumber of pruned signatures with vert_symmetries: {program.vertical_symmetry_prune_count}")
-#     print(f"\tNumber of total sigs per column before vert_symmetry pruning: {program.signatures_per_column}")
-#     # print(f"Proposed min_bound: {program.min_bound}")
-#     print(f"program runtime: {runtime}s")
-#     print()
-
-    # program = maxSnake_Enumerator(n,n)
-    # start = time.time()
-    # print(f"Jensen style algorithm to find maximal snake in an {n} x {n} square (using only vertical symmetry pruning after column completion)")
-    # print(program.run(False))
-    # runtime = time.time() - start
-    # print("Here are column by column stats:")
-    # print(f"    Number of pruned signatures with construction and conjecture 2/3: {program.prune_count}")
-    # print(f"    Number of pruned signatures with vert_symmetries: {program.vertical_symmetry_prune_count}")
-    # print(f"    Number of total sigs per column before vert_symmetry pruning: {program.signatures_per_column}")
-    # # print(f"Proposed min_bound: {program.min_bound}")
-    # print(f"program runtime: {runtime}s")
+#############################################################################
+# Program run and log
+#############################################################################
 
 def safe_run_and_log(n_values):
     os.makedirs("polyEnum_Jensen/python_maxSnakes/data", exist_ok=True)
@@ -232,7 +210,7 @@ def safe_run_and_log(n_values):
             log(f"{datetime.now().isoformat()}")
             log(f"Jensen-style algorithm to find maximal snake in an {n} x {n} square (using conjecture 2/3 + min_bound pruning)")
             
-            result = program.run(True)
+            result = program.run()
             log(str(result))
 
             runtime = time.time() - start
@@ -244,4 +222,4 @@ def safe_run_and_log(n_values):
             log(f"Program runtime: {runtime:.2f}s")
             log("")
 
-safe_run_and_log([10,11,12,13])
+safe_run_and_log([10])

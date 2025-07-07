@@ -1,10 +1,10 @@
-2025-07-07T11:47:30.331223
+2025-07-07T13:15:45.073797
 Jensen-style algorithm to find maximal snake in an 9 x 9 square (using conjecture 2/3 + min_bound pruning)
 Max area: 53 
 Number of configurations: 16
 Here are some column by column stats:
-	Number of pruned signatures with construction and 2/3 theorem: {(1, 3): 1, (1, 8): 225, (2, 4): 87, (2, 8): 3183, (3, 3): 1057, (3, 8): 1097, (4, 3): 17047, (4, 8): 17614, (5, 4): 1500, (5, 8): 9695, (6, 8): 1754, (7, 2): 300, (7, 3): 1078, (7, 5): 1391, (7, 8): 12307, (8, 2): 5903, (8, 4): 2974, (8, 8): 3766, (9, 2): 12875, (9, 3): 3656, (9, 4): 2818, (9, 5): 1994, (9, 8): 1962}
+	Number of pruned signatures with construction and 2/3 theorem: {(1, 3): 1, (1, 8): 225, (2, 4): 122, (2, 8): 5230, (3, 3): 1387, (3, 8): 3098, (4, 3): 21747, (4, 8): 27621, (5, 4): 1912, (5, 8): 13477, (6, 8): 4116, (7, 2): 484, (7, 3): 1606, (7, 5): 2011, (7, 8): 20976, (8, 2): 7750, (8, 4): 3986, (8, 8): 8566, (9, 2): 16274, (9, 3): 4479, (9, 4): 3374, (9, 5): 2199, (9, 8): 2875}
 	Number of pruned signatures with vert_symmetries: {0: 1, 1: 119, 2: 98, 3: 1486, 4: 1659, 5: 213, 6: 957, 7: 2732, 8: 3051}
 	Number of total sigs per column before vert_symmetry pruning: {1: 255, 2: 1744, 3: 12422, 4: 4399, 5: 1534, 6: 3975, 7: 10102, 8: 13462, 9: 91}
-Program runtime: 2.85s
+Program runtime: 2.86s
 
