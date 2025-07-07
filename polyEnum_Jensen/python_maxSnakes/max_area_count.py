@@ -16,6 +16,9 @@ class MaxAreaCount:
     def increase_max_area(self):
         self.max_area += 1
 
+    def decrease_max_area(self):
+        self.max_area -= 1
+
     def __repr__(self):
         return f"Max area: {self.max_area} \nNumber of configurations: {self.nb_configs}"
 
