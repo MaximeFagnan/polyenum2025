@@ -11,7 +11,7 @@
 
 
 // Warning this, just setting a bigger row height might break mirror and == for uninitialized RowEntrys
-constexpr int SIGNATURE_HEIGHT = 16; // Row height of 16, needs to be changed to the specific height of a signature. 
+constexpr int SIGNATURE_HEIGHT = 9; // Row height, needs to be changed to the specific height of a signature. 
 
 // ---------------------------------------------------------
 // Signature: represents the state of the boundary

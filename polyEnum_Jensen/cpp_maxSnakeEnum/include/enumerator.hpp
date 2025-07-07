@@ -52,15 +52,17 @@ public:
                 // for every signature in the table, add up to two signatures in new_table
                 for (const auto& [sig, mac] : table.items()) {
                     SignatureCounterPair current_SigMacPair = SignatureCounterPair(sig, mac);
-                    for (int modify_to = 0; modify_to <= 1; modify_to++) {
+                    // modify_to = 0 can be pruned here (no need to build them)
+                    for (int modify_to = 1; modify_to >= 0; modify_to--) {
+                        if (modify_to == 0 and should_prune(current_SigMacPair, col, row)) {
+                            pruned_signatures_after_cell[col - 1][row]++;
+                            continue;
+                        }
                         std::optional<SignatureCounterPair> possible_transitionned_sig_mac = current_SigMacPair.transition(row, modify_to);
                         if (possible_transitionned_sig_mac.has_value()) {
                             const SignatureCounterPair& post_trans_sig_mac = possible_transitionned_sig_mac.value();
-                            if (should_prune(post_trans_sig_mac, col, row)) {
+                            if (modify_to == 1 and should_prune(post_trans_sig_mac, col, row)) {
                                 pruned_signatures_after_cell[col-1][row]++;
-                               /* std::cout << "[PRUNE] col=" << col << " row=" << row
-                                    << " area=" << post_trans_sig_mac.maxAreaCount.max_area
-                                    << " signature=" << post_trans_sig_mac.signature << "\n";*/
                             }
                             else {
                                 new_table.add(post_trans_sig_mac.signature, post_trans_sig_mac.maxAreaCount);
@@ -173,31 +175,32 @@ public:
     }
 
     bool should_prune(const SignatureCounterPair& pair, int col, int row) const {
-        const Signature& sig = pair.signature;
         int sig_max_area = pair.maxAreaCount.max_area;
 
-        // Incomplete column removal technique
-        bool column_incomplete = (row < h - 1);
-        // Count how many cells lie above the kink that are still occupied
-        int area_above_kink = 0;
-        if (column_incomplete) {
-            for (int i = row; i >= 0; i--) {
-                if (sig.get_row(i).state != 0) area_above_kink++;
-            }
-        }
-        int sig_area_in_rect = sig_max_area - area_above_kink;
-        // Determine remaining width w of incomplete rectangle
-        int w = column_incomplete ? (b - (col - 1)) : (b - col);
-        if (w == 0) return false; // Final cell, don't prune and don't cause error.
-        int conject_area = conjectured_23_fill_area(w, h);
+        bool column_complete = (row == h - 1);
 
-        /* 
-        New pruning methods can be added :
-            * split in 2 rectangles for conj 2/3 along where the kink is (especially if kink is 3 rows above/below bottom or top of signature
-            * Calculate maximum number of cells of deg 1 that can be put to the right of the signture (considering only degree of cells) and 2/3 fill according to that
-        */
-        
-        return sig_area_in_rect + conject_area < min_bound;
+        int conject_area = 0;
+
+        if (column_complete) {
+            // Area to the right is a single full-height rectangle
+            int b_23 = b - col;
+            int h_23 = h;
+            conject_area = conjectured_23_fill_area(b_23, h_23);
+        }
+        else {
+            // Area to the right is split in two:
+            // Lower rectangle
+            int b1 = b - col;
+            int h1 = row + 1;
+            conject_area = conjectured_23_fill_area(b1, h1);
+
+            // Upper rectangle
+            int b2 = (b - col) + 1;
+            int h2 = h - (row + 1);
+            conject_area += conjectured_23_fill_area(b2, h2);
+        }
+
+        return sig_max_area + conject_area < min_bound;
     }
 
 };
