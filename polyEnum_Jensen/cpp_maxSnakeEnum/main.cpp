@@ -5,6 +5,10 @@
 #include "include/SignatureCounter_pair.hpp"
 #include "include/enumerator.hpp"
 #include <chrono> 
+#include <iomanip>
+#include <fstream>
+#include <iostream>
+#include <filesystem>
 
 
 // functions described below
@@ -13,7 +17,7 @@ void test_mirror_clone_lookup();
 void test_signature_vector_constructor();
 void test_maxAreaCounter();
 void test_signature_transition();
-void test_enumerator(int n);
+void run_enumerator(int n);
 
 
 int main() {
@@ -22,9 +26,10 @@ int main() {
     //test_signature_vector_constructor();
     //test_maxAreaCounter();
     //test_signature_transition();
-
-    test_enumerator(9);
-
+    int n_max = 14;
+    for (int i = 1; i <= n_max; i++) {
+        run_enumerator(i); // to be adjusted in the Signature file.
+    }
     return 0;
 }
 
@@ -192,7 +197,8 @@ void test_signature_transition() {
     std::cout << "OLD Max Area: " << scp.maxAreaCount << std::endl;
 }
 
-void test_enumerator(int n) {
+
+void run_enumerator(int n) {
     Enumerator enumerator(n);
 
     // Start timer
@@ -204,36 +210,59 @@ void test_enumerator(int n) {
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
 
-    std::cout << "\n=== Enumerator Summary for n = " << n << " ===\n";
-    std::cout << "Elapsed time: " << elapsed_seconds.count() << "s\n";
-    std::cout << "Min Bound: " << enumerator.min_bound << "\n";
+    // Prepare output file
+    std::filesystem::create_directories("data");
+    std::ofstream fout("data/max_snake_" + std::to_string(n) + "x" + std::to_string(n) + ".txt");
 
-    std::cout << "Total MaxAreaCount:\n";
-    std::cout << "  Max area: " << enumerator.total_mac.max_area << "\n";
-    std::cout << "  Number of configurations: " << enumerator.total_mac.nb_configs << "\n";
+    // Output stream that writes to both console and file
+    auto print = [&](const std::string& line) {
+        std::cout << line << '\n';
+        fout << line << '\n';
+        };
 
-    std::cout << "\nSignature counts after each cell (before pruning):\n";
-    for (int col = 0; col < n; ++col) {
-        std::cout << "  Column " << col << ": ";
-        for (int row = 0; row < n; ++row) {
-            std::cout << enumerator.signature_after_cell[col][row] << " ";
+    print("\n=== Enumerator Summary for n = " + std::to_string(n) + " ===");
+
+    // Print current date and time using ctime_s (safe alternative to ctime)
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    char time_str[26]; // ctime_s writes a null-terminated 26-char string
+    ctime_s(time_str, sizeof(time_str), &now_time);
+    print("Date and time of computation: " + std::string(time_str));
+
+
+    print("Elapsed time: " + std::to_string(elapsed_seconds.count()) + "s");
+    print("Min Bound: " + std::to_string(enumerator.min_bound));
+
+    print("  Max area: " + std::to_string(enumerator.total_mac.max_area));
+    print("  Number of configurations: " + std::to_string(enumerator.total_mac.nb_configs));
+
+    int pretty_display_width = 12;
+    print("\nSignature counts after each cell (before vertical symmetry):");
+    for (int row = 0; row < n; ++row) {
+        std::ostringstream line;
+        line << "  Row " << std::setw(2) << row << "   : ";
+        for (int col = 0; col < n; ++col) {
+            line << std::setw(pretty_display_width) << enumerator.signature_after_cell[col][row] << " ";
         }
-        std::cout << "\n";
+        print(line.str());
     }
 
-    std::cout << "\nPruned signatures:\n";
-    for (int col = 0; col < n; ++col) {
-        std::cout << "  Column " << col << ": ";
-        for (int row = 0; row < n; ++row) {
-            std::cout << enumerator.pruned_signatures_after_cell[col][row] << " ";
+    print("\nPruned signatures:");
+    for (int row = 0; row < n; ++row) {
+        std::ostringstream line;
+        line << "  Row " << std::setw(2) << row << "   : ";
+        for (int col = 0; col < n; ++col) {
+            line << std::setw(pretty_display_width) << enumerator.pruned_signatures_after_cell[col][row] << " ";
         }
-        std::cout << "\n";
+        print(line.str());
     }
 
-    std::cout << "\nSignatures pruned due to vertical symmetry:\n";
-    for (int col = 0; col < n; ++col) {
-        std::cout << "  Column " << col << ": " << enumerator.pruned_due_to_vert_symmetry[col] << "\n";
+    print("\nSignatures pruned due to vertical symmetry:");
+    for (int col = 0; col < n - 1; ++col) {
+        print("  Column " + std::to_string(col) + ": " + std::to_string(enumerator.pruned_due_to_vert_symmetry[col]));
     }
 
-    std::cout << "===========================================\n";
+    print("===========================================");
+
+    fout.close();
 }
