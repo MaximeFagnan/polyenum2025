@@ -44,31 +44,17 @@ class maxSnake_Enumerator:
                 # make a new table
                 new_table = SignatureTable()
                 for sig, maxAreaCount in table.items():
-
-                    #first, add an occupied cell, update signature table
-                    to_modify = 1
                     sig_count = SignatureCounter_pair(sig, maxAreaCount)
-                    new_pair = sig_count.transition(row, to_modify)
-                    if new_pair is not None:
-                        if prune:
-                            if not self.should_prune(new_pair,col,row):
-                                new_table.add(new_pair) # we did not prune
-                            else:
-                                self.prune_count[col] = self.prune_count.get(col,0)+1 # we pruned, let's count it
-                        else: # no pruning at all
-                            new_table.add(new_pair)
-
-                    # Second, add an unoccupied cell
-                    to_modify = 0
-                    new_pair = sig_count.transition(row, to_modify)
-                    if new_pair is not None: # None if impossible transition including separating a component
-                        if prune:
-                            if not self.should_prune(new_pair,col,row):
-                                new_table.add(new_pair) # we did not prune
-                            else:
-                                self.prune_count[col] = self.prune_count.get(col,0)+1 # we pruned, let's count it
-                        else: # no pruning at all
-                            new_table.add(new_pair)
+                    for to_modify in {0,1}:
+                        new_pair = sig_count.transition(row, to_modify)
+                        if new_pair is not None:
+                            if prune:
+                                if not self.should_prune(new_pair,col,row):
+                                    new_table.add(new_pair) # we did not prune
+                                else:
+                                    self.prune_count[(col,row)] = self.prune_count.get((col,row),0)+1 # we pruned, let's count it
+                            else: # no pruning at all
+                                new_table.add(new_pair)
 
                 # Update the signatureGF table after every move of the kink
                 table = new_table
@@ -168,6 +154,14 @@ class maxSnake_Enumerator:
         if w==0: # Bravo! You are filling the last cell!
             return False
         
+        conject_23_fill_area = self.conj_23(w,h)
+        
+        return sig_area_in_rect + conject_23_fill_area < self.min_bound
+
+        
+    
+
+    def conj_23(w,h):
         # conjecture 2/3
         if w==1 or (h==2 and w==2):
             conject_23_fill_area = w*h
@@ -184,7 +178,6 @@ class maxSnake_Enumerator:
         else:
             conject_23_fill_area = (2*w*h + 2)//3
         
-        return sig_area_in_rect + conject_23_fill_area < self.min_bound
     
 
 # for n in {13,14}:
@@ -240,4 +233,4 @@ def safe_run_and_log(n_values):
             log(f"Program runtime: {runtime:.2f}s")
             log("")
 
-safe_run_and_log([12])
+safe_run_and_log([9])
