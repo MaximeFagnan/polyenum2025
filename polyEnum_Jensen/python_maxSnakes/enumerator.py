@@ -130,18 +130,31 @@ class maxSnake_Enumerator:
     def should_prune(self, sig_counter_pair: SignatureCounter_pair,col: int, row:int) -> bool:
         sig: Signature = sig_counter_pair.signature
         sig_max_area :int = sig_counter_pair.maxAreaCount.max_area
-        column_incomplete = row < self.h-1 # kink at bottom of column only if row == h-1
-
-        # calculate area left signature
-        area_above_kink = 0 # assume kink moved to next column
-        if column_incomplete:  # adjust
-            area_above_kink = sum(1 for i in range(row + 1) if sig.states[i] != 0)
-        sig_area_in_rect = sig_max_area - area_above_kink # ignore area above kink
+        column_complete = (row == self.h-1) # kink at bottom of column iff row == h-1
 
         # calculate area right of signature with conjecture 2/3 filling of size w x h
         conject_23_fill_area = 0
-        w = self.b - (col - 1) if column_incomplete else self.b - col
-        h = self.h
+
+        # Area to the right is a single big rectangle
+        if column_complete:
+            b_23 = self.b - col
+            h_23 = self.h
+            conject_23_fill_area = self.conj_23(b_23,h_23)
+        
+        # Area to the right can be split into two useful rectangles
+        elif row>=2 and row<=self.h-4:
+            #rectangle 1
+            b_23 = self.b - col
+            h_23 = row+1
+            conject_23_fill_area = self.conj_23(b_23,h_23)
+            #rectangle 2
+            b_23 = (self.b - col) + 1
+            h_23 = self.h - (row+1)
+            conject_23_fill_area += self.conj_23(b_23,h_23)
+
+        else: return False # Haven't found a way to prune
+        
+        return sig_max_area + conject_23_fill_area < self.min_bound
         # print(
         #     f"[PRUNE DEBUG]\n"
         #     f"  col={col}, row={row}, b={self.b}, h={self.h}\n"
@@ -151,19 +164,16 @@ class maxSnake_Enumerator:
         #     f"  area_above_kink={area_above_kink}, sig_area_in_rect={sig_area_in_rect}\n"
         #     f"  total_possible={sig_area_in_rect + conject_23_fill_area}, min_bound={self.min_bound}"
         # )
-        if w==0: # Bravo! You are filling the last cell!
-            return False
-        
-        conject_23_fill_area = self.conj_23(w,h)
-        
-        return sig_area_in_rect + conject_23_fill_area < self.min_bound
 
-        
-    
 
-    def conj_23(w,h):
+    def conj_23(self, w: int, h: int) -> int:
+        conject_23_fill_area = 0
+        if w>h:
+            w,h = h,w
+        if w==0:
+            conject_23_fill_area = 0
         # conjecture 2/3
-        if w==1 or (h==2 and w==2):
+        elif w==1 or (h==2 and w==2):
             conject_23_fill_area = w*h
         elif w==2 and h%2==1 and h>=3 :
             conject_23_fill_area = (3*w*h + 2)//4
@@ -177,6 +187,7 @@ class maxSnake_Enumerator:
             conject_23_fill_area = (2*w*h + 3)//3
         else:
             conject_23_fill_area = (2*w*h + 2)//3
+        return conject_23_fill_area
         
     
 
@@ -233,4 +244,4 @@ def safe_run_and_log(n_values):
             log(f"Program runtime: {runtime:.2f}s")
             log("")
 
-safe_run_and_log([9])
+safe_run_and_log([10,11,12,13])
