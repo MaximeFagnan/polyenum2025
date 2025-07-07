@@ -67,3 +67,6 @@ polyEnum_Jensen/cpp_maxSnakeEnum/cpp_maxSnakeEnum.sln
 *.tlog
 *.obj
 *.pdb
+*.pdb
+/polyEnum_Jensen/cpp_maxSnakeEnum/x64/Debug
+/.vs
