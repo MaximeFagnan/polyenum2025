@@ -7,6 +7,8 @@
 #include <cstddef> // for size_t
 #include "RowEntry.hpp"
 #include <cassert>
+#include <ostream>
+
 
 // Warning this, just setting a bigger row height might break mirror and == for uninitialized RowEntrys
 constexpr int SIGNATURE_HEIGHT = 16; // Row height of 16, needs to be changed to the specific height of a signature. 
@@ -29,6 +31,11 @@ struct Signature {
         //number_of_connected_components(0)
     {
         assert(h <= SIGNATURE_HEIGHT && "Too many row entries for Signature");
+    }
+
+    // blank signature
+    static Signature blank(int height) {
+        return Signature(std::vector<RowEntry>(height, RowEntry(0, false)));
     }
 
     // Overloaded constructor that receives a list of row_entries and computes hashes
@@ -130,7 +137,18 @@ struct Signature {
         mirrored_sig.compute_hash();
         return mirrored_sig;
     }
+
 };
+
+std::ostream& operator<<(std::ostream& os, const Signature& sig) {
+    os << "[Signature: height=" << sig.height << "]\n";
+    for (int i = 0; i < sig.height; ++i) {
+        const RowEntry& row = sig.get_row(i);
+        os << "  Row " << i << ": (leftOccupied=" << (int)row.leftOccupied
+            << ", state=" << (int)row.state << ")\n";
+    }
+    return os;
+}
 
 // ---------------------------------------------------------
 // SignatureHasher: Custom hash functor to use with unordered_map

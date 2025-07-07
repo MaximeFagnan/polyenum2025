@@ -3,6 +3,9 @@
 #include "include/transition_table.hpp"
 #include "include/MaxAreaCounter.hpp"
 #include "include/SignatureCounter_pair.hpp"
+#include "include/enumerator.hpp"
+#include <chrono> 
+
 
 // functions described below
 void signature_map_manipulation_example();
@@ -10,6 +13,7 @@ void test_mirror_clone_lookup();
 void test_signature_vector_constructor();
 void test_maxAreaCounter();
 void test_signature_transition();
+void test_enumerator(int n);
 
 
 int main() {
@@ -18,6 +22,8 @@ int main() {
     //test_signature_vector_constructor();
     //test_maxAreaCounter();
     //test_signature_transition();
+
+    test_enumerator(9);
 
     return 0;
 }
@@ -184,4 +190,50 @@ void test_signature_transition() {
 
     // Print old max area
     std::cout << "OLD Max Area: " << scp.maxAreaCount << std::endl;
+}
+
+void test_enumerator(int n) {
+    Enumerator enumerator(n);
+
+    // Start timer
+    auto start = std::chrono::high_resolution_clock::now();
+
+    enumerator.run();
+
+    // Stop timer
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+
+    std::cout << "\n=== Enumerator Summary for n = " << n << " ===\n";
+    std::cout << "Elapsed time: " << elapsed_seconds.count() << "s\n";
+    std::cout << "Min Bound: " << enumerator.min_bound << "\n";
+
+    std::cout << "Total MaxAreaCount:\n";
+    std::cout << "  Max area: " << enumerator.total_mac.max_area << "\n";
+    std::cout << "  Number of configurations: " << enumerator.total_mac.nb_configs << "\n";
+
+    std::cout << "\nSignature counts after each cell (before pruning):\n";
+    for (int col = 0; col < n; ++col) {
+        std::cout << "  Column " << col << ": ";
+        for (int row = 0; row < n; ++row) {
+            std::cout << enumerator.signature_after_cell[col][row] << " ";
+        }
+        std::cout << "\n";
+    }
+
+    std::cout << "\nPruned signatures:\n";
+    for (int col = 0; col < n; ++col) {
+        std::cout << "  Column " << col << ": ";
+        for (int row = 0; row < n; ++row) {
+            std::cout << enumerator.pruned_signatures_after_cell[col][row] << " ";
+        }
+        std::cout << "\n";
+    }
+
+    std::cout << "\nSignatures pruned due to vertical symmetry:\n";
+    for (int col = 0; col < n; ++col) {
+        std::cout << "  Column " << col << ": " << enumerator.pruned_due_to_vert_symmetry[col] << "\n";
+    }
+
+    std::cout << "===========================================\n";
 }
