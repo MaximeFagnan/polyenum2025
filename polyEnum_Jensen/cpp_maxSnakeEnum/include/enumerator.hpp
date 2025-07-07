@@ -25,7 +25,7 @@ public:
 		: b(n), h(n),
 		signature_after_cell(std::vector<std::vector<int>>(h, std::vector<int>(b, 0))),
 		pruned_signatures_after_cell(std::vector<std::vector<int>>(h, std::vector<int>(b, 0))),
-		pruned_due_to_vert_symmetry(std::vector<int>(b,0))  {
+		pruned_due_to_vert_symmetry(std::vector<int>(b-1,0))  {
 		min_bound = determine_min_bound(b, h);
 	}
 
@@ -43,7 +43,7 @@ public:
             int size_before_merge = table.items().size();
             table.merge_mirrored_signatures();
             int size_after_merge = table.items().size();
-            pruned_due_to_vert_symmetry[col-1] = size_before_merge - size_after_merge;
+            if (col>1) pruned_due_to_vert_symmetry[col-2] = size_before_merge - size_after_merge;
             
             //cell after cell for rows 0 to h-1
             for (int row = 0; row < h; row++) {

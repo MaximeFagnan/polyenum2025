@@ -1,0 +1,23 @@
+
+=== Enumerator Summary for n = 3 ===
+Date and time of computation: Mon Jul  7 17:03:37 2025
+
+Elapsed time: 0.000068s
+Min Bound: 7
+  Max area: 7
+  Number of configurations: 8
+
+Signature counts after each cell (before vertical symmetry):
+  Row  0   :            2            5            7 
+  Row  1   :            4            6            6 
+  Row  2   :            4            7            5 
+
+Pruned signatures:
+  Row  0   :            0            0            4 
+  Row  1   :            0            1            6 
+  Row  2   :            4            4            5 
+
+Signatures pruned due to vertical symmetry:
+  Column 0: 1
+  Column 1: 1
+===========================================

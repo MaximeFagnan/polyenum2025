@@ -1,0 +1,17 @@
+
+=== Enumerator Summary for n = 1 ===
+Date and time of computation: Mon Jul  7 17:03:37 2025
+
+Elapsed time: 0.000013s
+Min Bound: 1
+  Max area: 1
+  Number of configurations: 1
+
+Signature counts after each cell (before vertical symmetry):
+  Row  0   :            1 
+
+Pruned signatures:
+  Row  0   :            1 
+
+Signatures pruned due to vertical symmetry:
+===========================================

@@ -1,0 +1,38 @@
+
+=== Enumerator Summary for n = 8 ===
+Date and time of computation: Mon Jul  7 17:03:38 2025
+
+Elapsed time: 0.116588s
+Min Bound: 42
+  Max area: 42
+  Number of configurations: 212
+
+Signature counts after each cell (before vertical symmetry):
+  Row  0   :            2          157          823         3180         2768         6144         3658         4563 
+  Row  1   :            4          195         1219         2664         2972         7685         3877         4145 
+  Row  2   :            8          305         1629         3225         3795         9447         5042         3419 
+  Row  3   :           16          459         1515         3837         4726        10558         5037         2437 
+  Row  4   :           32          670         2025         4941         5583        12246         5789         1513 
+  Row  5   :           57          955         2204         4607         6514         9005         6806          808 
+  Row  6   :          114         1459         2919         5738         8130        10703         7756          389 
+  Row  7   :          163          592         2812         3000         6492         4260         6138          162 
+
+Pruned signatures:
+  Row  0   :            0            0            0            0            0            0            0         1872 
+  Row  1   :            0           31            0         2345         1077            0         1276         2377 
+  Row  2   :            0            0            0            0            0          608            0         2563 
+  Row  3   :            0           54          690            0            0         2047         1470         2365 
+  Row  4   :            0            0            0            0            0            0            0         1902 
+  Row  5   :            7            0          590         2179          423         8618            0         1233 
+  Row  6   :            0           76            0            0            0            0          955          720 
+  Row  7   :           65         2091          885         5155         3976        11349         2397          363 
+
+Signatures pruned due to vertical symmetry:
+  Column 0: 76
+  Column 1: 32
+  Column 2: 289
+  Column 3: 1107
+  Column 4: 1664
+  Column 5: 1543
+  Column 6: 1759
+===========================================
